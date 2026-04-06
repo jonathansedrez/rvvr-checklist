@@ -1,0 +1,6 @@
+- Realtime - Websocket
+- Checklist
+- Sessão autenticada
+- Supabase
+- ORM Prisma
+- Admin parecido com o trello
