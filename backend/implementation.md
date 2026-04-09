@@ -6,7 +6,7 @@
 
 | Phase | Description    | Status         |
 | ----- | -------------- | -------------- |
-| 1     | Project Setup  | ⬜ Not Started |
+| 1     | Project Setup  | ✅ Complete    |
 | 2     | Database       | ⬜ Not Started |
 | 3     | Core API       | ⬜ Not Started |
 | 4     | Authentication | ⬜ Not Started |
@@ -29,28 +29,28 @@ Initialize the project with Bun, Hono, Prisma, and configure the development env
 
 ### Tasks
 
-- [ ] Initialize Bun project (`bun init`)
-- [ ] Install dependencies
-  - [ ] `hono` - Web framework
-  - [ ] `prisma` - ORM
-  - [ ] `@prisma/client` - Prisma client
-  - [ ] `@supabase/supabase-js` - Supabase client
-  - [ ] `zod` - Input validation
-- [ ] Install dev dependencies
-  - [ ] `typescript`
-  - [ ] `@types/bun`
-- [ ] Configure TypeScript (`tsconfig.json`)
-- [ ] Create project structure
-  - [ ] `src/index.ts`
-  - [ ] `src/app.ts`
-  - [ ] `src/routes/`
-  - [ ] `src/services/`
-  - [ ] `src/middleware/`
-  - [ ] `src/ws/`
-  - [ ] `src/lib/`
-- [ ] Create `.env.example` with required variables
-- [ ] Create `.gitignore`
-- [ ] Setup basic Hono app with health check endpoint (`GET /health`)
+- [x] Initialize Bun project (`bun init`)
+- [x] Install dependencies
+  - [x] `hono` - Web framework
+  - [x] `prisma` - ORM
+  - [x] `@prisma/client` - Prisma client
+  - [x] `@supabase/supabase-js` - Supabase client
+  - [x] `zod` - Input validation
+- [x] Install dev dependencies
+  - [x] `typescript`
+  - [x] `@types/bun`
+- [x] Configure TypeScript (`tsconfig.json`)
+- [x] Create project structure
+  - [x] `src/index.ts`
+  - [x] `src/app.ts`
+  - [x] `src/routes/`
+  - [x] `src/services/`
+  - [x] `src/middleware/`
+  - [x] `src/ws/`
+  - [x] `src/lib/`
+- [x] Create `.env.example` with required variables
+- [x] Create `.gitignore`
+- [x] Setup basic Hono app with health check endpoint (`GET /health`)
 
 ### Deliverables
 
