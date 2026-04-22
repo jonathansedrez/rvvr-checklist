@@ -17,6 +17,11 @@ export default [
         console: "readonly",
         process: "readonly",
         Bun: "readonly",
+        Request: "readonly",
+        Response: "readonly",
+        URL: "readonly",
+        Buffer: "readonly",
+        globalThis: "readonly",
       },
     },
     plugins: {
