@@ -7,7 +7,7 @@
 | Phase | Description    | Status         |
 | ----- | -------------- | -------------- |
 | 1     | Project Setup  | ✅ Complete    |
-| 2     | Database       | ⬜ Not Started |
+| 2     | Database       | 🔄 In Progress |
 | 3     | Core API       | ⬜ Not Started |
 | 4     | Authentication | ⬜ Not Started |
 | 5     | WebSocket      | ⬜ Not Started |
@@ -34,7 +34,6 @@ Initialize the project with Bun, Hono, Prisma, and configure the development env
   - [x] `hono` - Web framework
   - [x] `prisma` - ORM
   - [x] `@prisma/client` - Prisma client
-  - [x] `@supabase/supabase-js` - Supabase client
   - [x] `zod` - Input validation
 - [x] Install dev dependencies
   - [x] `typescript`
@@ -67,17 +66,27 @@ Set up Prisma with Supabase PostgreSQL and create the database schema.
 
 ### Tasks
 
-- [ ] Initialize Prisma (`bunx prisma init`)
-- [ ] Configure `DATABASE_URL` in `.env`
-- [ ] Create Prisma schema (`prisma/schema.prisma`)
-  - [ ] `Team` model
-  - [ ] `Section` model
-  - [ ] `Task` model
-- [ ] Run initial migration (`bunx prisma migrate dev`)
-- [ ] Generate Prisma client (`bunx prisma generate`)
-- [ ] Create Prisma client instance (`src/lib/prisma.ts`)
-- [ ] Test database connection
-- [ ] Seed initial data (optional)
+- [x] Initialize Prisma (`bunx prisma init`)
+- [x] Configure `DATABASE_URL` in `.env`
+- [x] Create Prisma schema (`prisma/schema.prisma`)
+  - [x] `Team` model
+  - [x] `Section` model
+  - [x] `Task` model
+- [ ] Run initial migration (`bunx prisma migrate dev`) - blocked by network
+- [x] Generate Prisma client (`bunx prisma generate`)
+- [x] Create Prisma client instance (`src/lib/prisma.ts`)
+- [x] Test database connection via `GET /health/db` endpoint
+- [x] Seed initial data script (`prisma/seed.ts`)
+- [x] Create tables via Supabase SQL Editor (workaround)
+- [x] Seed data via Supabase SQL Editor (workaround)
+- [ ] Test database connection locally - blocked by network (PostgreSQL ports 5432/6543)
+
+### Notes
+
+⚠️ **Network Issue**: Local network blocks PostgreSQL ports. Workarounds:
+- Use mobile hotspot for local development
+- Use pooler connection URL (port `6543`) instead of direct (port `5432`)
+- Deploy to cloud (network won't be blocked)
 
 ### Deliverables
 
@@ -145,7 +154,7 @@ Implement Supabase JWT authentication for admin endpoints.
   - [ ] `SUPABASE_URL`
   - [ ] `SUPABASE_ANON_KEY`
   - [ ] `SUPABASE_JWT_SECRET`
-- [ ] Create Supabase client (`src/lib/supabase.ts`)
+- [ ] Install and create Supabase client (`src/lib/supabase.ts`)
 - [ ] Create auth middleware (`src/middleware/auth.ts`)
   - [ ] Extract JWT from `Authorization` header
   - [ ] Validate JWT with Supabase
