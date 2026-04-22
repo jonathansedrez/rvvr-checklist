@@ -41,7 +41,6 @@ app.get("/health/db", async (c) => {
   }
 });
 
-// GET /api/v1/teams - List all teams with sections and tasks
 app.get("/api/v1/teams", async (c) => {
   try {
     const teams = await prisma.team.findMany({
@@ -62,7 +61,6 @@ app.get("/api/v1/teams", async (c) => {
   }
 });
 
-// GET /api/v1/teams/:id - Get single team with sections and tasks
 app.get("/api/v1/teams/:id", async (c) => {
   try {
     const { id } = c.req.param();

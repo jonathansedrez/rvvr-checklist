@@ -3,7 +3,6 @@ import { prisma } from "../src/lib/prisma";
 async function main() {
   console.log("Seeding database...");
 
-  // Create Tech Team
   const techTeam = await prisma.team.create({
     data: {
       name: "Tech",
@@ -44,7 +43,6 @@ async function main() {
 
   console.log(`Created team: ${techTeam.name}`);
 
-  // Create Worship Team
   const worshipTeam = await prisma.team.create({
     data: {
       name: "Worship",
@@ -79,7 +77,6 @@ async function main() {
 
   console.log(`Created team: ${worshipTeam.name}`);
 
-  // Create Welcome Team
   const welcomeTeam = await prisma.team.create({
     data: {
       name: "Welcome",
