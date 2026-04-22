@@ -75,7 +75,7 @@ Set up Prisma with Supabase PostgreSQL and create the database schema.
 - [ ] Run initial migration (`bunx prisma migrate dev`) - blocked by network
 - [x] Generate Prisma client (`bunx prisma generate`)
 - [x] Create Prisma client instance (`src/lib/prisma.ts`)
-- [x] Test database connection script (`scripts/test-db.ts`)
+- [x] Test database connection via `GET /health/db` endpoint
 - [x] Seed initial data script (`prisma/seed.ts`)
 - [x] Create tables via Supabase SQL Editor (workaround)
 - [x] Seed data via Supabase SQL Editor (workaround)

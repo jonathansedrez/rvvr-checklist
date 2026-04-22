@@ -17,8 +17,7 @@
     "db:migrate": "bun x prisma migrate dev",
     "db:push": "bun x prisma db push",
     "db:seed": "bun run prisma/seed.ts",
-    "db:studio": "bun x prisma studio",
-    "db:test": "bun run scripts/test-db.ts"
+    "db:studio": "bun x prisma studio"
   },
   "lint-staged": {
     "*.ts": [
