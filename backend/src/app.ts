@@ -3,7 +3,6 @@ import { secureHeaders } from "hono/secure-headers";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { prisma } from "./lib/prisma";
-import { supabase } from "./lib/supabase";
 
 const app = new Hono();
 
@@ -13,30 +12,6 @@ app.use("*", cors());
 
 app.get("/health", (c) => {
   return c.json({ status: "ok" });
-});
-
-// Test endpoint using Supabase REST API (HTTPS - bypasses port blocking)
-app.get("/health/supabase", async (c) => {
-  try {
-    const { data: teams, error } = await supabase.from("teams").select("*");
-
-    if (error) throw error;
-
-    return c.json({
-      status: "ok",
-      connection: "supabase-rest",
-      teamCount: teams?.length ?? 0,
-      teams,
-    });
-  } catch (error) {
-    return c.json(
-      {
-        status: "error",
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      500
-    );
-  }
 });
 
 app.get("/health/db", async (c) => {

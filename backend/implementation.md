@@ -34,7 +34,6 @@ Initialize the project with Bun, Hono, Prisma, and configure the development env
   - [x] `hono` - Web framework
   - [x] `prisma` - ORM
   - [x] `@prisma/client` - Prisma client
-  - [x] `@supabase/supabase-js` - Supabase client
   - [x] `zod` - Input validation
 - [x] Install dev dependencies
   - [x] `typescript`
@@ -86,7 +85,7 @@ Set up Prisma with Supabase PostgreSQL and create the database schema.
 
 ⚠️ **Network Issue**: Local network blocks PostgreSQL ports. Workarounds:
 - Use mobile hotspot for local development
-- Use Supabase REST API (`/health/supabase` endpoint)
+- Use pooler connection URL (port `6543`) instead of direct (port `5432`)
 - Deploy to cloud (network won't be blocked)
 
 ### Deliverables
@@ -155,7 +154,7 @@ Implement Supabase JWT authentication for admin endpoints.
   - [ ] `SUPABASE_URL`
   - [ ] `SUPABASE_ANON_KEY`
   - [ ] `SUPABASE_JWT_SECRET`
-- [ ] Create Supabase client (`src/lib/supabase.ts`)
+- [ ] Install and create Supabase client (`src/lib/supabase.ts`)
 - [ ] Create auth middleware (`src/middleware/auth.ts`)
   - [ ] Extract JWT from `Authorization` header
   - [ ] Validate JWT with Supabase
