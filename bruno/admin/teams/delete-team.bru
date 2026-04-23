@@ -1,0 +1,19 @@
+meta {
+  name: Delete Team
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/teams/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 11111111-1111-1111-1111-111111111112
+}
+
+auth:bearer {
+  token: {{token}}
+}

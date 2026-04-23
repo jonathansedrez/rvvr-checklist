@@ -1,0 +1,26 @@
+meta {
+  name: Create Task
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/sections/:sectionId/tasks
+  body: json
+  auth: bearer
+}
+
+params:path {
+  sectionId: a6dc60d8-20e3-4784-860e-4c2e12b44609
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Test microphones",
+    "slug": null
+  }
+}
