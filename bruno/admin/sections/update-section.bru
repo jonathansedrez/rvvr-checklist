@@ -1,0 +1,25 @@
+meta {
+  name: Update Section
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/v1/sections/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id:
+}
+
+body:json {
+  {
+    "name": "During Service"
+  }
+}
