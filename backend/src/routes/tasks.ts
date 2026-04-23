@@ -9,12 +9,12 @@ const router = new Hono();
 
 const createTaskSchema = z.object({
   title: z.string().min(1).max(200),
-  slug: z.string().optional(),
+  slug: z.string().nullish(),
 });
 
 const updateTaskSchema = z.object({
   title: z.string().min(1).max(200).optional(),
-  slug: z.string().optional(),
+  slug: z.string().nullish(),
 });
 
 router.patch("/tasks/:id/toggle", async (c) => {

@@ -1,11 +1,11 @@
 import { prisma } from "../lib/prisma";
 
 export const taskService = {
-  async create(sectionId: string, data: { title: string; slug?: string }) {
+  async create(sectionId: string, data: { title: string; slug?: string | null }) {
     return prisma.task.create({ data: { ...data, sectionId } });
   },
 
-  async update(id: string, data: { title?: string; slug?: string }) {
+  async update(id: string, data: { title?: string; slug?: string | null }) {
     return prisma.task.update({ where: { id }, data });
   },
 
