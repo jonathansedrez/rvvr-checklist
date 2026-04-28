@@ -27,6 +27,9 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    conditions: ['browser'],
+  },
   test: {
     environment: 'jsdom',
     globals: true,
