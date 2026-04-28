@@ -25,6 +25,10 @@ export interface Team {
   updatedAt: string;
 }
 
+// Shapes returned by create endpoints (no nested relations)
+export type TeamRow = Omit<Team, 'sections'>;
+export type SectionRow = Omit<Section, 'tasks'>;
+
 export interface AuthUser {
   id: string;
   email: string;

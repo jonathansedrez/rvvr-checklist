@@ -1,4 +1,4 @@
-import type { Team, Task, Section } from './types';
+import type { Team, Task, Section, TeamRow, SectionRow } from './types';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
 
@@ -30,7 +30,6 @@ async function request<T>(
   return json.data as T;
 }
 
-// Teams
 export const api = {
   teams: {
     list(): Promise<Team[]> {
@@ -39,10 +38,10 @@ export const api = {
     get(id: string): Promise<Team> {
       return request(`/teams/${id}`);
     },
-    create(name: string): Promise<Team> {
+    create(name: string): Promise<TeamRow> {
       return request('/teams', { method: 'POST', body: JSON.stringify({ name }) });
     },
-    update(id: string, name: string): Promise<Team> {
+    update(id: string, name: string): Promise<TeamRow> {
       return request(`/teams/${id}`, { method: 'PUT', body: JSON.stringify({ name }) });
     },
     delete(id: string): Promise<null> {
@@ -51,10 +50,10 @@ export const api = {
   },
 
   sections: {
-    create(teamId: string, name: string): Promise<Section> {
+    create(teamId: string, name: string): Promise<SectionRow> {
       return request(`/teams/${teamId}/sections`, { method: 'POST', body: JSON.stringify({ name }) });
     },
-    update(id: string, name: string): Promise<Section> {
+    update(id: string, name: string): Promise<SectionRow> {
       return request(`/sections/${id}`, { method: 'PUT', body: JSON.stringify({ name }) });
     },
     delete(id: string): Promise<null> {

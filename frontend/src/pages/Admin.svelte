@@ -3,7 +3,7 @@
   import { push } from 'svelte-spa-router';
   import { api } from '../lib/api';
   import { authStore, teamsStore } from '../lib/stores.svelte';
-  import type { Team, Section, Task } from '../lib/types';
+  import type { Team, Section, Task, TeamRow, SectionRow } from '../lib/types';
 
   // Auth guard
   if (!authStore.isAuthenticated) {
