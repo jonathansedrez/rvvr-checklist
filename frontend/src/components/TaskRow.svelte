@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Task } from '../lib/types';
   import { api } from '../lib/api';
+  import { push } from 'svelte-spa-router';
 
   let { task, onToggle }: { task: Task; onToggle?: (taskId: string, completed: boolean) => void } = $props();
 
@@ -15,6 +16,10 @@
     } finally {
       pending = false;
     }
+  }
+
+  function openDetail() {
+    push(`/task/${task.slug}`);
   }
 </script>
 
@@ -41,5 +46,18 @@
 
   {#if pending}
     <span class="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></span>
+  {/if}
+
+  {#if task.slug}
+    <button
+      onclick={openDetail}
+      class="flex-shrink-0 text-gray-400 hover:text-blue-500 transition-colors"
+      aria-label="View details for {task.title}"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+      </svg>
+    </button>
   {/if}
 </li>
