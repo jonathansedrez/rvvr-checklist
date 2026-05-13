@@ -5,23 +5,61 @@
   import { ws } from "../lib/websocket";
   import { teamsStore } from "../lib/stores.svelte";
   import SectionCard from "../components/SectionCard.svelte";
+  import type { Section } from "../lib/types";
 
   const SECTION_COLORS = ["#6a94c4", "#c4954a", "#4a9e72"];
+  const ALL_TAB_ID = "__all__";
+
+  type ViewSection = { section: Section; color: string; label: string };
 
   let currentTeamId = $state<string | null>(null);
   let openSectionIds = $state<Set<string>>(new Set());
 
   let currentTeam = $derived(
-    teamsStore.teams.find((t) => t.id === currentTeamId) ??
-      teamsStore.teams[0] ??
-      null,
+    teamsStore.teams.find((t) => t.id === currentTeamId) ?? null,
   );
 
+  let headerName = $derived(
+    currentTeamId === ALL_TAB_ID ? "Todos" : (currentTeam?.name ?? "—"),
+  );
+
+  let viewSections = $derived.by((): ViewSection[] => {
+    if (currentTeamId === ALL_TAB_ID) {
+      const merged = new Map<string, Section>();
+      for (const team of teamsStore.teams) {
+        for (const section of team.sections) {
+          const existing = merged.get(section.name);
+          if (existing) {
+            merged.set(section.name, {
+              ...existing,
+              tasks: [...existing.tasks, ...section.tasks],
+            });
+          } else {
+            merged.set(section.name, { ...section });
+          }
+        }
+      }
+      return Array.from(merged.values()).map((section, idx) => ({
+        section,
+        color: SECTION_COLORS[idx % SECTION_COLORS.length],
+        label: section.name,
+      }));
+    }
+    if (!currentTeam) return [];
+    return currentTeam.sections.map((section, idx) => ({
+      section,
+      color: SECTION_COLORS[idx % SECTION_COLORS.length],
+      label: section.name,
+    }));
+  });
+
   let progress = $derived.by(() => {
-    if (!currentTeam) return { done: 0, total: 0, pct: 0 };
-    const all = currentTeam.sections.flatMap((s) => s.tasks);
-    const done = all.filter((t) => t.completed).length;
-    const total = all.length;
+    const tasks =
+      currentTeamId === ALL_TAB_ID
+        ? teamsStore.teams.flatMap((t) => t.sections.flatMap((s) => s.tasks))
+        : (currentTeam?.sections.flatMap((s) => s.tasks) ?? []);
+    const done = tasks.filter((t) => t.completed).length;
+    const total = tasks.length;
     return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
   });
 
@@ -59,9 +97,15 @@
 
   function selectTeam(teamId: string) {
     currentTeamId = teamId;
-    const team = teamsStore.teams.find((t) => t.id === teamId);
-    if (team) {
-      openSectionIds = new Set(team.sections.slice(0, 2).map((s) => s.id));
+    if (teamId === ALL_TAB_ID) {
+      // open first merged section by default
+      const firstId = teamsStore.teams[0]?.sections[0]?.id;
+      openSectionIds = firstId ? new Set([firstId]) : new Set();
+    } else {
+      const team = teamsStore.teams.find((t) => t.id === teamId);
+      if (team) {
+        openSectionIds = new Set(team.sections.slice(0, 2).map((s) => s.id));
+      }
     }
   }
 
@@ -107,7 +151,7 @@
         </button>
       </div>
     </div>
-    <div class="header-team-name">{currentTeam?.name ?? "—"}</div>
+    <div class="header-team-name">{headerName}</div>
     <div class="progress-wrap">
       <div class="progress-bar">
         <div class="progress-fill" style="width:{progress.pct}%"></div>
@@ -129,6 +173,13 @@
         {team.name}
       </button>
     {/each}
+    <button
+      class="tab"
+      class:active={currentTeamId === ALL_TAB_ID}
+      onclick={() => selectTeam(ALL_TAB_ID)}
+    >
+      Todos
+    </button>
   </div>
 
   <div class="sections">
@@ -136,13 +187,14 @@
       <div class="state-msg">Carregando...</div>
     {:else if teamsStore.error}
       <div class="state-error">{teamsStore.error}</div>
-    {:else if !currentTeam || currentTeam.sections.length === 0}
+    {:else if viewSections.length === 0}
       <div class="state-msg">Nenhuma seção configurada.</div>
     {:else}
-      {#each currentTeam.sections as section, idx (section.id)}
+      {#each viewSections as { section, color, label } (section.id)}
         <SectionCard
           {section}
-          color={SECTION_COLORS[idx % SECTION_COLORS.length]}
+          {color}
+          {label}
           isOpen={openSectionIds.has(section.id)}
           onToggleSection={() => toggleSection(section.id)}
           {onToggleTask}

@@ -6,12 +6,14 @@
     section,
     color,
     isOpen,
+    label,
     onToggleSection,
     onToggleTask,
   }: {
     section: Section;
     color: string;
     isOpen: boolean;
+    label?: string;
     onToggleSection: () => void;
     onToggleTask: (taskId: string, completed: boolean) => void;
   } = $props();
@@ -22,7 +24,7 @@
 <div class="section" class:open={isOpen}>
   <button type="button" class="sec-hdr" onclick={onToggleSection}>
     <div class="sec-dot" style="background:{color}"></div>
-    <span class="sec-name">{section.name}</span>
+    <span class="sec-name">{label ?? section.name}</span>
     <span class="sec-badge">{doneCount}/{section.tasks.length}</span>
     <svg
       class="sec-chevron"
