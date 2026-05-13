@@ -1,2 +1,18 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+:root {
+  --bg: #f5f4f2;
+  --surface: #ffffff;
+  --border: #ebebea;
+  --text: #1a1916;
+  --text-muted: #9c9890;
+  --text-light: #c4c0ba;
+  --accent: #2d6a4f;
+  --accent-dim: rgba(45, 106, 79, 0.08);
+  --green: #2d6a4f;
+  --green-check: #3a8c65;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.05);
+  --shadow-card-open:
+    0 2px 6px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.07);
+}

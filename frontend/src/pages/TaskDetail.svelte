@@ -1,56 +1,53 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { marked } from 'marked';
-  import { push } from 'svelte-spa-router';
+  import { onMount } from "svelte";
+  import { marked } from "marked";
+  import { push } from "svelte-spa-router";
 
   let { params }: { params: { slug: string } } = $props();
 
-  type LoadState = 'loading' | 'ready' | 'not-found' | 'error';
+  type LoadState = "loading" | "ready" | "not-found" | "error";
 
-  let loadState: LoadState = $state('loading');
-  let html = $state('');
+  let loadState: LoadState = $state("loading");
+  let html = $state("");
 
   onMount(async () => {
     try {
       const res = await fetch(`/content/tasks/${params.slug}.md`);
       if (!res.ok) {
-        loadState = 'not-found';
+        loadState = "not-found";
         return;
       }
       const text = await res.text();
       html = await marked(text);
-      loadState = 'ready';
+      loadState = "ready";
     } catch {
-      loadState = 'error';
+      loadState = "error";
     }
   });
 </script>
 
-<div class="min-h-screen bg-gray-50">
-  <div class="max-w-2xl mx-auto px-4 py-6">
-    <button
-      onclick={() => push('/')}
-      class="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors"
-      aria-label="Back to checklist"
-    >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+<div class="page">
+  <div class="inner">
+    <button class="back" onclick={() => push("/")} aria-label="Voltar">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M15 19l-7-7 7-7" />
       </svg>
-      Back
+      Voltar
     </button>
 
-    {#if loadState === 'loading'}
-      <div class="flex items-center justify-center py-16 text-gray-400 text-sm">
-        Loading…
-      </div>
-    {:else if loadState === 'not-found'}
-      <div class="flex flex-col items-center justify-center py-16 gap-2 text-gray-400">
-        <p class="text-sm">Content not available for this task.</p>
-      </div>
-    {:else if loadState === 'error'}
-      <div class="flex flex-col items-center justify-center py-16 gap-2 text-gray-400">
-        <p class="text-sm">Failed to load content. Please try again.</p>
-      </div>
+    {#if loadState === "loading"}
+      <div class="state-msg">Carregando…</div>
+    {:else if loadState === "not-found"}
+      <div class="state-msg">Conteúdo não disponível para esta tarefa.</div>
+    {:else if loadState === "error"}
+      <div class="state-msg">Falha ao carregar. Tente novamente.</div>
     {:else}
       <article class="prose prose-gray max-w-none">
         {@html html}
@@ -58,3 +55,50 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .page {
+    font-family: "DM Sans", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  .inner {
+    padding: 52px 24px 48px;
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 28px;
+    transition: color 0.15s;
+  }
+
+  .back:hover {
+    color: var(--text);
+  }
+
+  .back svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .state-msg {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 48px 0;
+  }
+</style>
