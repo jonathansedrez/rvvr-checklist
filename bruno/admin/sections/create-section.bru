@@ -1,0 +1,25 @@
+meta {
+  name: Create Section
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/teams/:teamId/sections
+  body: json
+  auth: bearer
+}
+
+params:path {
+  teamId: 87ea0cd6-f45b-47ae-823d-a8e133cda0ed
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Pre-service"
+  }
+}

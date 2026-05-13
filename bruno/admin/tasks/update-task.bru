@@ -1,0 +1,26 @@
+meta {
+  name: Update Task
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/v1/tasks/:id
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+params:path {
+  id:
+}
+
+body:json {
+  {
+    "title": "Check projector",
+    "slug": "check-projector"
+  }
+}

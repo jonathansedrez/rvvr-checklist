@@ -1,0 +1,25 @@
+meta {
+  name: Update Team
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/v1/teams/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 11111111-1111-1111-1111-111111111111
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Tech Team"
+  }
+}

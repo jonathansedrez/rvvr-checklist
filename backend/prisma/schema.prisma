@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Team {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sections Section[]
+
+  @@map("teams")
+}
+
+model Section {
+  id        String   @id @default(uuid()) @db.Uuid
+  teamId    String   @map("team_id") @db.Uuid
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  team  Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@map("sections")
+}
+
+model Task {
+  id        String   @id @default(uuid()) @db.Uuid
+  sectionId String   @map("section_id") @db.Uuid
+  title     String
+  slug      String?
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
