@@ -233,205 +233,154 @@
   }
 </script>
 
-<div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <header class="bg-blue-600 shadow-sm">
-    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div>
-        <h1 class="text-white text-xl font-bold">Admin Dashboard</h1>
-        <p class="text-blue-200 text-xs">{authStore.user?.email}</p>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="#/" class="text-blue-200 text-sm hover:text-white">View Checklist</a>
-        <button
-          onclick={logout}
-          class="bg-blue-700 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-blue-800 transition-colors"
-        >
-          Logout
-        </button>
+<div class="page">
+  <header>
+    <div class="header-top">
+      <div class="brand">RVVR</div>
+      <div class="header-right">
+        <a href="#/" class="back-link">Ver checklist</a>
+        <button onclick={logout} class="logout-btn">Sair</button>
       </div>
     </div>
+    <div class="header-title">Admin</div>
+    <div class="header-sub">{authStore.user?.email}</div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-6 space-y-6">
-    <!-- Global error -->
+  <main>
     {#if teamsStore.error}
-      <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm">
-        {teamsStore.error}
-      </div>
+      <div class="state-error">{teamsStore.error}</div>
     {/if}
 
     <!-- Create Team -->
-    <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-      <h2 class="text-base font-semibold text-gray-900 mb-3">Add Team</h2>
-      {#if teamFormError}
-        <p class="text-red-600 text-sm mb-2">{teamFormError}</p>
-      {/if}
-      <form onsubmit={createTeam} class="flex gap-2">
-        <input
-          type="text"
-          bind:value={newTeamName}
-          required
-          placeholder="Team name"
-          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          disabled={teamFormLoading}
-          class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
-        >
-          Add
-        </button>
-      </form>
+    <section class="card">
+      <div class="card-header">
+        <span class="card-label">Adicionar time</span>
+      </div>
+      <div class="card-body">
+        {#if teamFormError}
+          <p class="form-error">{teamFormError}</p>
+        {/if}
+        <form onsubmit={createTeam} class="form-row">
+          <input
+            type="text"
+            bind:value={newTeamName}
+            required
+            placeholder="Nome do time"
+            class="input"
+          />
+          <button type="submit" disabled={teamFormLoading} class="btn-primary">
+            Adicionar
+          </button>
+        </form>
+      </div>
     </section>
 
     <!-- Teams list -->
     {#if teamsStore.loading}
-      <div class="flex justify-center py-10">
-        <div class="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-      </div>
+      <div class="state-msg">Carregando...</div>
     {:else}
       {#each teamsStore.teams as team (team.id)}
-        <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <section class="card">
           <!-- Team header -->
-          <div class="bg-blue-50 border-b border-blue-100 px-5 py-3 flex items-center justify-between">
+          <div class="team-header">
             {#if editingTeam?.id === team.id}
-              <form onsubmit={saveEditTeam} class="flex items-center gap-2 flex-1">
-                <input
-                  type="text"
-                  bind:value={editTeamName}
-                  required
-                  class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button type="submit" class="text-blue-600 text-sm font-medium hover:text-blue-800">Save</button>
-                <button type="button" onclick={() => editingTeam = null} class="text-gray-500 text-sm hover:text-gray-700">Cancel</button>
+              <form onsubmit={saveEditTeam} class="inline-form">
+                <input type="text" bind:value={editTeamName} required class="input" />
+                <button type="submit" class="btn-link">Salvar</button>
+                <button type="button" onclick={() => editingTeam = null} class="btn-link muted">Cancelar</button>
               </form>
             {:else}
-              <h2 class="font-semibold text-blue-900">{team.name}</h2>
-              <div class="flex gap-2">
-                <button onclick={() => startEditTeam(team)} class="text-blue-600 text-xs hover:text-blue-800">Edit</button>
-                <button onclick={() => deleteTeam(team.id)} class="text-red-500 text-xs hover:text-red-700">Delete</button>
+              <h2 class="team-name">{team.name}</h2>
+              <div class="row-actions">
+                <button onclick={() => startEditTeam(team)} class="btn-link">Editar</button>
+                <button onclick={() => deleteTeam(team.id)} class="btn-link danger">Excluir</button>
               </div>
             {/if}
           </div>
 
           <!-- Sections -->
-          <div class="divide-y divide-gray-100">
-            {#each team.sections as section (section.id)}
-              <div class="px-5 py-3">
-                <!-- Section header -->
-                <div class="flex items-center justify-between mb-2">
-                  {#if editingSection?.id === section.id}
-                    <form onsubmit={saveEditSection} class="flex items-center gap-2 flex-1">
-                      <input
-                        type="text"
-                        bind:value={editSectionName}
-                        required
-                        class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      <button type="submit" class="text-blue-600 text-sm font-medium hover:text-blue-800">Save</button>
-                      <button type="button" onclick={() => editingSection = null} class="text-gray-500 text-sm hover:text-gray-700">Cancel</button>
-                    </form>
-                  {:else}
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500">{section.name}</h3>
-                    <div class="flex gap-2">
-                      <button onclick={() => startEditSection(section)} class="text-blue-600 text-xs hover:text-blue-800">Edit</button>
-                      <button onclick={() => deleteSection(section.id)} class="text-red-500 text-xs hover:text-red-700">Delete</button>
-                    </div>
-                  {/if}
-                </div>
-
-                <!-- Tasks -->
-                <ul class="space-y-1 mb-3">
-                  {#each section.tasks as task (task.id)}
-                    <li class="flex items-center gap-2 text-sm">
-                      {#if editingTask?.id === task.id}
-                        <form onsubmit={saveEditTask} class="flex items-center gap-2 flex-1">
-                          <input
-                            type="text"
-                            bind:value={editTaskTitle}
-                            required
-                            placeholder="Title"
-                            class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                          <input
-                            type="text"
-                            bind:value={editTaskSlug}
-                            placeholder="Slug (optional)"
-                            class="w-32 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                          <button type="submit" class="text-blue-600 text-sm font-medium hover:text-blue-800">Save</button>
-                          <button type="button" onclick={() => editingTask = null} class="text-gray-500 text-sm hover:text-gray-700">Cancel</button>
-                        </form>
-                      {:else}
-                        <span class="flex-1 text-gray-800">{task.title}</span>
-                        {#if task.slug}
-                          <span class="text-gray-400 text-xs font-mono">{task.slug}</span>
-                        {/if}
-                        <button onclick={() => startEditTask(task)} class="text-blue-600 text-xs hover:text-blue-800">Edit</button>
-                        <button onclick={() => deleteTask(task.id)} class="text-red-500 text-xs hover:text-red-700">Delete</button>
-                      {/if}
-                    </li>
-                  {/each}
-                </ul>
-
-                <!-- Add task form -->
-                {#if taskFormSectionId === section.id}
-                  <form onsubmit={createTask} class="flex gap-2">
-                    <input
-                      type="text"
-                      bind:value={newTaskTitle}
-                      required
-                      placeholder="Task title"
-                      class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <input
-                      type="text"
-                      bind:value={newTaskSlug}
-                      placeholder="Slug (optional)"
-                      class="w-32 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button type="submit" disabled={taskFormLoading} class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors">Add</button>
-                    <button type="button" onclick={() => { taskFormSectionId = null; newTaskTitle = ''; newTaskSlug = ''; }} class="text-gray-500 text-sm hover:text-gray-700">Cancel</button>
+          {#each team.sections as section (section.id)}
+            <div class="section-item">
+              <div class="section-header">
+                {#if editingSection?.id === section.id}
+                  <form onsubmit={saveEditSection} class="inline-form">
+                    <input type="text" bind:value={editSectionName} required class="input" />
+                    <button type="submit" class="btn-link">Salvar</button>
+                    <button type="button" onclick={() => editingSection = null} class="btn-link muted">Cancelar</button>
                   </form>
-                  {#if taskFormError}
-                    <p class="text-red-600 text-xs mt-1">{taskFormError}</p>
-                  {/if}
                 {:else}
-                  <button
-                    onclick={() => { taskFormSectionId = section.id; taskFormError = null; }}
-                    class="text-blue-600 text-xs hover:text-blue-800 font-medium"
-                  >
-                    + Add task
-                  </button>
+                  <h3 class="section-name">{section.name}</h3>
+                  <div class="row-actions">
+                    <button onclick={() => startEditSection(section)} class="btn-link">Editar</button>
+                    <button onclick={() => deleteSection(section.id)} class="btn-link danger">Excluir</button>
+                  </div>
                 {/if}
               </div>
-            {/each}
-          </div>
 
-          <!-- Add section form -->
-          <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
+              <!-- Tasks -->
+              <ul class="tasks-list">
+                {#each section.tasks as task (task.id)}
+                  <li class="task-item">
+                    {#if editingTask?.id === task.id}
+                      <form onsubmit={saveEditTask} class="inline-form">
+                        <input type="text" bind:value={editTaskTitle} required placeholder="Título" class="input" />
+                        <input type="text" bind:value={editTaskSlug} placeholder="Slug (opcional)" class="input input-slug" />
+                        <button type="submit" class="btn-link">Salvar</button>
+                        <button type="button" onclick={() => editingTask = null} class="btn-link muted">Cancelar</button>
+                      </form>
+                    {:else}
+                      <span class="task-title">{task.title}</span>
+                      {#if task.slug}
+                        <span class="task-slug">{task.slug}</span>
+                      {/if}
+                      <div class="row-actions">
+                        <button onclick={() => startEditTask(task)} class="btn-link">Editar</button>
+                        <button onclick={() => deleteTask(task.id)} class="btn-link danger">Excluir</button>
+                      </div>
+                    {/if}
+                  </li>
+                {/each}
+              </ul>
+
+              <!-- Add task -->
+              {#if taskFormSectionId === section.id}
+                <form onsubmit={createTask} class="form-row form-row-sm">
+                  <input type="text" bind:value={newTaskTitle} required placeholder="Título da tarefa" class="input" />
+                  <input type="text" bind:value={newTaskSlug} placeholder="Slug (opcional)" class="input input-slug" />
+                  <button type="submit" disabled={taskFormLoading} class="btn-primary btn-sm">Adicionar</button>
+                  <button type="button" onclick={() => { taskFormSectionId = null; newTaskTitle = ''; newTaskSlug = ''; }} class="btn-link muted">Cancelar</button>
+                </form>
+                {#if taskFormError}
+                  <p class="form-error">{taskFormError}</p>
+                {/if}
+              {:else}
+                <button
+                  onclick={() => { taskFormSectionId = section.id; taskFormError = null; }}
+                  class="btn-add"
+                >
+                  + Adicionar tarefa
+                </button>
+              {/if}
+            </div>
+          {/each}
+
+          <!-- Add section -->
+          <div class="add-section-footer">
             {#if sectionFormTeamId === team.id}
-              <form onsubmit={createSection} class="flex gap-2">
-                <input
-                  type="text"
-                  bind:value={newSectionName}
-                  required
-                  placeholder="Section name"
-                  class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button type="submit" disabled={sectionFormLoading} class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors">Add</button>
-                <button type="button" onclick={() => { sectionFormTeamId = null; newSectionName = ''; }} class="text-gray-500 text-sm hover:text-gray-700">Cancel</button>
+              <form onsubmit={createSection} class="form-row form-row-sm">
+                <input type="text" bind:value={newSectionName} required placeholder="Nome da seção" class="input" />
+                <button type="submit" disabled={sectionFormLoading} class="btn-primary btn-sm">Adicionar</button>
+                <button type="button" onclick={() => { sectionFormTeamId = null; newSectionName = ''; }} class="btn-link muted">Cancelar</button>
               </form>
               {#if sectionFormError}
-                <p class="text-red-600 text-xs mt-1">{sectionFormError}</p>
+                <p class="form-error">{sectionFormError}</p>
               {/if}
             {:else}
               <button
                 onclick={() => { sectionFormTeamId = team.id; sectionFormError = null; }}
-                class="text-blue-600 text-xs hover:text-blue-800 font-medium"
+                class="btn-add"
               >
-                + Add section
+                + Adicionar seção
               </button>
             {/if}
           </div>
@@ -440,3 +389,325 @@
     {/if}
   </main>
 </div>
+
+<style>
+  .page {
+    font-family: "DM Sans", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 680px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 52px 24px 0;
+    margin-bottom: 24px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .brand {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .back-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .back-link:hover {
+    color: var(--text);
+  }
+
+  .logout-btn {
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .logout-btn:hover {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  .header-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  main {
+    flex: 1;
+    padding: 0 24px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ── Cards ── */
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .card-body {
+    padding: 16px 20px;
+  }
+
+  .team-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .team-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Sections ── */
+
+  .section-item {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .section-name {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .add-section-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  /* ── Tasks ── */
+
+  .tasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .task-title {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .task-slug {
+    font-size: 11px;
+    font-family: monospace;
+    color: var(--text-light);
+  }
+
+  /* ── Buttons ── */
+
+  .row-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+  .btn-link:hover {
+    color: var(--text);
+  }
+  .btn-link.danger {
+    color: #c9584a;
+  }
+  .btn-link.danger:hover {
+    color: #a0392c;
+  }
+  .btn-link.muted {
+    color: var(--text-light);
+  }
+
+  .btn-add {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+  .btn-add:hover {
+    color: var(--text);
+  }
+
+  .btn-primary {
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-primary.btn-sm {
+    padding: 6px 12px;
+  }
+
+  /* ── Forms ── */
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-row-sm {
+    margin-top: 4px;
+  }
+
+  .inline-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .input {
+    flex: 1;
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    min-width: 0;
+  }
+  .input:focus {
+    border-color: var(--text-muted);
+  }
+  .input::placeholder {
+    color: var(--text-light);
+  }
+
+  .input-slug {
+    flex: 0 0 140px;
+  }
+
+  .form-error {
+    font-size: 12px;
+    color: #c9584a;
+    margin: 6px 0 0;
+  }
+
+  /* ── States ── */
+
+  .state-msg {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 48px 0;
+  }
+
+  .state-error {
+    background: #fff0f0;
+    border: 1px solid #fcc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #c00;
+    font-size: 13px;
+  }
+</style>
